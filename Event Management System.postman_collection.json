@@ -1,0 +1,281 @@
+{
+	"info": {
+		"_postman_id": "4e619435-6e1b-437f-8109-34a789543cc3",
+		"name": "Event Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26547809",
+		"_collection_link": "https://solar-eclipse-948524.postman.co/workspace/Team-Workspace~ca75da6b-4cba-4fb2-80f6-716fa951813c/collection/26547809-4e619435-6e1b-437f-8109-34a789543cc3?action=share&source=collection_link&creator=26547809"
+	},
+	"item": [
+		{
+			"name": "Auth Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullName\": \"Shailendra Trivedi\",\r\n    \"username\": \"testuser\",\r\n    \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful login - Token extraction\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    var jsonData = pm.response.json();\r",
+							"    var token = jsonData.data.jwtToken;\r",
+							"    pm.globals.set(\"auth_token\", token);\r",
+							"\r",
+							"    console.log(\"Token extracted and set to environment variable: \" + token);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Events",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"eventName\": \"Update Tech Meetup\",\r\n  \"eventLocation\": \"San Francisco\",\r\n  \"eventDateTime\": \"2024-05-20T18:00:00.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/events/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Event",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"eventName\": \"Tech Meetup\",\r\n  \"eventLocation\": \"San Francisco\",\r\n  \"eventDateTime\": \"2024-05-20T18:00:00.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Rsvp",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"attending\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/events/2/rsvp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"2",
+						"rsvp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Events",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Events",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/events/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"events",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "{{auth_token}}",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
