@@ -4,7 +4,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const eventRouter = express.Router();
 
-eventRouter.get("/", eventController.getAllEvent);
+eventRouter.get("/", authMiddleware, eventController.getAllEvent);
 eventRouter.post("/", authMiddleware, eventController.createEvent);
 eventRouter.put("/:id", authMiddleware, eventController.updateEvent);
 eventRouter.delete("/:id", authMiddleware, eventController.deleteEvent);
