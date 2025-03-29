@@ -1,6 +1,6 @@
 const cors = require("cors");
 const express = require("express");
-const errorHandler = require("./middleware/errorHandler");
+const { errorHandler } = require("./middleware/errorHandler");
 const userRouter = require("./routes/userRoutes");
 const eventRouter = require("./routes/eventRoutes");
 const { PORT } = require("./constant");
@@ -12,8 +12,8 @@ app.use(cors({ origin: "*" }));
 app.get("/test", (req, res) => {
   res.send("Server is Working...");
 });
-app.use("/events", eventRouter);
 app.use("/auth", userRouter);
+app.use("/events", eventRouter);
 
 app.use(errorHandler);
 

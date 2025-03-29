@@ -1,3 +1,4 @@
+const { throwError } = require("../middleware/errorHandler");
 const eventService = require("../services/eventService");
 const rsvpService = require("../services/rsvpService");
 
@@ -59,7 +60,7 @@ class EventController {
       );
       res.status(200).json(response);
     } catch (error) {
-      next(error);
+      res.status(400).json({ status: "ERROR", message: error.message });
     }
   }
 }

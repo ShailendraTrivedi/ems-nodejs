@@ -1,27 +1,19 @@
-const EventNotFoundException = require("../errors/EventNotFoundException");
-const InvalidEventIDException = require("../errors/InvalidEventIDException");
-const UserException = require("../errors/UserException");
+const throwError = (message) => {
+  const error = new Error(message);
+  error.statusCode = 400;
+  throw error;
+};
 
 const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
+  const statusCode =
+    err.statusCode && err.statusCode < 500 ? err.statusCode : 500;
+  const message = statusCode !== 500 ? err.message : "Internal Server Error";
 
-  if (
-    err instanceof EventNotFoundException ||
-    err instanceof InvalidEventIDException ||
-    err instanceof UserException
-  ) {
-    return res.status(err.statusCode || 400).json({
-      status: "ERROR",
-      message: err.message,
-      data: null,
-    });
-  }
-
-  return res.status(500).json({
+  res.status(statusCode).json({
     status: "ERROR",
-    message: "Internal Server Error",
+    message,
     data: null,
   });
 };
 
-module.exports = errorHandler;
+module.exports = { errorHandler, throwError };

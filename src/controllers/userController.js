@@ -1,7 +1,7 @@
 const userService = require("../services/userService");
 
 class UserController {
-  async register(req, res) {
+  async register(req, res, next) {
     try {
       const { fullName, username, password } = req.body;
       const response = await userService.createUser(
@@ -11,17 +11,17 @@ class UserController {
       );
       res.status(201).json(response);
     } catch (error) {
-      res.status(400).json({ status: "ERROR", message: error.message });
+      next(error);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       const { username, password } = req.body;
       const response = await userService.loginUser(username, password);
       res.status(200).json(response);
     } catch (error) {
-      res.status(400).json({ status: "ERROR", message: error.message });
+      next(error);
     }
   }
 }

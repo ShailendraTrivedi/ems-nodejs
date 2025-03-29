@@ -1,6 +1,7 @@
 const { Event } = require("../models");
 const EventDTO = require("../dtos/eventDto");
 const RsvpDTO = require("../dtos/rsvpDto");
+const { throwError } = require("../middleware/errorHandler");
 
 class EventService {
   async getAllEvents(page, limit) {
@@ -32,6 +33,10 @@ class EventService {
   }
 
   async createEvent(eventData) {
+    const { eventName, eventLocation, eventDateTime } = eventData;
+    if (!eventName || !eventLocation || !eventDateTime)
+      throwError("credentials cannot be null.");
+
     const event = await Event.create(eventData);
     return {
       status: true,
@@ -42,7 +47,7 @@ class EventService {
 
   async updateEvent(eventId, eventData) {
     const event = await Event.findByPk(eventId);
-    if (!event) throw new Error(`Event with ID ${eventId} not found`);
+    if (!event) throwError(`Event with ID ${eventId} not found`);
 
     await event.update(eventData);
     return {
@@ -54,7 +59,7 @@ class EventService {
 
   async deleteEvent(eventId) {
     const event = await Event.findByPk(eventId);
-    if (!event) throw new Error(`Event with ID ${eventId} not found`);
+    if (!event) throwError(`Event with ID ${eventId} not found`);
 
     await event.destroy();
     return {
