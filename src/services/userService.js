@@ -4,20 +4,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../constant");
 const { throwError } = require("../middleware/errorHandler");
+const validateInputs = require("../utils/validateInputs");
 
 class UserService {
   async createUser(fullName, username, password) {
-    const existingUser = await User.findOne({
-      where: { username },
-    });
+    validateInputs({ fullName, username, password });
+
+    const existingUser = await User.findOne({ where: { username } });
     if (existingUser) throwError(`User ${username} already exists.`);
 
     password = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      fullName,
-      username,
-      password,
-    });
+    const user = await User.create({ fullName, username, password });
 
     const token = jwt.sign({ userID: user.get("userID") }, JWT_SECRET, {
       expiresIn: "1h",
@@ -31,6 +28,8 @@ class UserService {
   }
 
   async loginUser(username, password) {
+    validateInputs({ username, password });
+
     const user = await User.findOne({ where: { username } });
     if (!user) throwError("User not found");
 

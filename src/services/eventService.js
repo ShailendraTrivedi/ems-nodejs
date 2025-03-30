@@ -2,9 +2,12 @@ const { Event } = require("../models");
 const EventDTO = require("../dtos/eventDto");
 const RsvpDTO = require("../dtos/rsvpDto");
 const { throwError } = require("../middleware/errorHandler");
+const validateInputs = require("../utils/validateInputs");
 
 class EventService {
   async getAllEvents(page, limit) {
+    validateInputs({ page, limit });
+
     const offset = page * limit;
     const { count, rows } = await Event.findAndCountAll({
       offset,
@@ -34,8 +37,7 @@ class EventService {
 
   async createEvent(eventData) {
     const { eventName, eventLocation, eventDateTime } = eventData;
-    if (!eventName || !eventLocation || !eventDateTime)
-      throwError("credentials cannot be null.");
+    validateInputs({ eventName, eventLocation, eventDateTime });
 
     const event = await Event.create(eventData);
     return {
@@ -46,6 +48,8 @@ class EventService {
   }
 
   async updateEvent(eventId, eventData) {
+    validateInputs({ eventId });
+
     const event = await Event.findByPk(eventId);
     if (!event) throwError(`Event with ID ${eventId} not found`);
 
@@ -58,6 +62,8 @@ class EventService {
   }
 
   async deleteEvent(eventId) {
+    validateInputs({ eventId });
+
     const event = await Event.findByPk(eventId);
     if (!event) throwError(`Event with ID ${eventId} not found`);
 
